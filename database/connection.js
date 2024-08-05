@@ -1,0 +1,16 @@
+const mongoose = require('mongoose')
+
+const connection = async() => {
+    try {
+        await mongoose.connect('mongodb://localhost:27017/mi_blog', {
+        //  useNewUrlParser: true,
+        // useUnifiedTopology: true
+        })
+        console.log('Conecatdos correctamente a la base de datos mi blog')
+    } catch (error) {
+        console.log(error)
+        throw new Error('No se ha podido conecatar a la base de dato')
+    }
+} 
+
+module.exports = connection
