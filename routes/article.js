@@ -10,5 +10,6 @@ router.get('/curso', ArticleController.curso)
 router.post('/crear', ArticleController.create)
 router.get('/listar', ArticleController.getArticles)
 router.get('/listar/:id', ArticleController.getOne)
+router.delete('/borrar/:id', ArticleController.deleteArticle)
 
 module.exports = router;

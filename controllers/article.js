@@ -131,11 +131,45 @@ const getOne = async (req, res) => {
     }
 };
 
+const deleteArticle = async(req, res) => {
+
+    try {
+        // Recoger un id por la URL
+        let article_id = req.params.id;
+
+        // Buscar el artículo
+        const article = await Article.findByIdAndDelete({_id : article_id});
+
+        // Si no existe, devolver el error
+        if (!article) {
+            return res.status(404).json({
+                status: "error",
+                mensaje: 'No existe el artículo'
+            });
+        }
+
+        // Devolver el artículo
+        return res.status(200).json({
+            status: "success",
+            mensaje: 'El artículo se ha eliminado',
+            article
+        });
+    } catch (err) {
+        // Manejar errores
+        return res.status(500).json({
+            status: "error",
+            mensaje: 'Error al eliminar el artículo',
+            error: err.message
+        });
+    }
+}
+
 
 module.exports = {
     prueba, 
     curso, 
     create,
     getArticles, 
-    getOne
+    getOne, 
+    deleteArticle
 }
