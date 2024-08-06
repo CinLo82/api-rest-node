@@ -75,7 +75,10 @@ const create = async(req, res) => {
 const getArticles = async (req, res) => {
     try {
         // Find
-        const articles = await Article.find({}).exec();
+        const articles = await Article.find({})
+            .limit(3)
+            .sort({date: -1})
+            .exec()                                  
         if (!articles || articles.length === 0) {
             return res.status(404).json({
                 status: "error",
@@ -84,6 +87,7 @@ const getArticles = async (req, res) => {
         }
         return res.status(200).json({
             status: "success",
+            contador: articles.length,
             articles
         });
     } catch (error) {
