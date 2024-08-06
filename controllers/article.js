@@ -1,5 +1,7 @@
 const {validarArticulo} = require("../helpers/validar")
 const Article = require("../models/Article")
+const fs = require('fs')
+const path = require("path")
 
 const prueba = (req, res) => {
 
@@ -199,6 +201,75 @@ const update = async (req, res) => {
             error: error.message
         });
     }
+}
+
+const upload = async (req, res) => {
+    try {
+        // Recoger el fichero de imagen subido
+        if (!req.file) {
+            return res.status(404).json({
+                status: "error",
+                mensaje: 'Petición inválida, no se ha subido ningún archivo',
+            });
+        }
+
+        // Nombre del archivo
+        let nombreArchivo = req.file.filename;
+
+        // Extensión del archivo
+        let extension = path.extname(nombreArchivo).toLowerCase().slice(1);
+
+        // Comprobar la extensión correcta
+        if (!['png', 'jpg', 'jpeg', 'gif'].includes(extension)) {
+            // Borrar el archivo
+            fs.unlink(req.file.path, (err) => {
+                if (err) {
+                    return res.status(500).json({
+                        status: "error",
+                        mensaje: 'Error al borrar el archivo',
+                        error: err.message
+                    });
+                }
+                return res.status(400).json({
+                    status: "error",
+                    mensaje: 'La extensión del archivo no es válida',
+                    extension
+                });
+            });
+        } else {
+            // Actualizar el artículo con la imagen subida
+            let articleId = req.params.id;
+            try {
+                // Buscar y actualizar el artículo
+                let articleUpdated = await Article.findByIdAndUpdate(articleId, { image: nombreArchivo }, { new: true });
+
+                if (!articleUpdated) {
+                    return res.status(500).json({
+                        status: "error",
+                        mensaje: 'Error al guardar la imagen del artículo',
+                    });
+                }
+
+                return res.status(200).json({
+                    status: "success",
+                    mensaje: 'Imagen subida y artículo actualizado',
+                    article: articleUpdated
+                });
+            } catch (err) {
+                return res.status(500).json({
+                    status: "error",
+                    mensaje: 'Error al guardar la imagen del artículo',
+                    error: err.message
+                });
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: "error",
+            mensaje: 'Error al subir la imagen',
+            error: error.message
+        });
+    }
 };
 
 
@@ -209,5 +280,6 @@ module.exports = {
     getArticles, 
     getOne, 
     deleteArticle,
-    update
+    update,
+    upload
 }
