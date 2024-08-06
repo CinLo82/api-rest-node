@@ -7,6 +7,7 @@ const ArticleController = require('../controllers/article')
 router.get('/ruta-de-prueba', ArticleController.prueba)
 router.get('/curso', ArticleController.curso)
 
-router.post('/crear', ArticleController.crear)
+router.post('/crear', ArticleController.create)
+router.get('/listar', ArticleController.getArticles)
 
 module.exports = router;

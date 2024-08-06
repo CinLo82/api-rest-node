@@ -30,7 +30,7 @@ const curso = (req, res) => {
     ])
 }
 
-const crear = async(req, res) => {
+const create = async(req, res) => {
     // recoger los parametros por post a guardar
     let parametros = req.body
     //validar los datos
@@ -72,8 +72,32 @@ const crear = async(req, res) => {
     }
 }
 
+const getArticles = async (req, res) => {
+    try {
+        // Find
+        const articles = await Article.find({}).exec();
+        if (!articles || articles.length === 0) {
+            return res.status(404).json({
+                status: "error",
+                mensaje: 'No hay articulos para mostrar'
+            });
+        }
+        return res.status(200).json({
+            status: "success",
+            articles
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: "error",
+            mensaje: 'Error al obtener los articulos',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     prueba, 
     curso, 
-    crear
+    create,
+    getArticles
 }
