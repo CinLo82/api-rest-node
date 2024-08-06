@@ -30,5 +30,6 @@ router.delete('/borrar/:id', ArticleController.deleteArticle)
 router.put('/actualizar/:id', ArticleController.update)
 router.post('/subir-imagen/:id', [upload.single('file')], ArticleController.upload);
 router.get('/imagen/:fichero', ArticleController.imagen);
+router.get('/buscar/:busqueda', ArticleController.search);
 
 module.exports = router;

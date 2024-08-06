@@ -274,11 +274,9 @@ const upload = async (req, res) => {
 const imagen = (req, res) => {
     // Recoger el nombre del archivo
     let fichero = req.params.fichero;
-    console.log(fichero)
 
     // Comprobar si el archivo existe
     let rutaArchivo = `./images/articles/${fichero}`;
-    console.log(rutaArchivo)
     fs.stat(rutaArchivo, (error, stats) => {
         if (stats) {
         return res.sendFile(path.resolve(rutaArchivo));    
@@ -295,6 +293,43 @@ const imagen = (req, res) => {
     });
 }
 
+const search = async(req, res) => {
+    try {
+        // Recoger la palabra de búsqueda
+        let busqueda = req.params.busqueda;
+
+        // Find or
+        const articles = await Article.find({
+            "$or": [
+                { "title": { "$regex": busqueda, "$options": "i" } },
+                { "content": { "$regex": busqueda, "$options": "i" } }
+            ]
+        }).sort([['date', 'descending']])
+        .exec()
+
+       // Verificar si no hay artículos
+        if (articles.length === 0) {
+        return res.status(200).json({
+            status: "success",
+            mensaje: 'No hay artículos que coincidan con la búsqueda',
+            contador: 0,
+        });
+        }
+        // Devolver resultado
+        return res.status(200).json({
+            status: "success",
+            contador: articles.length,
+            articles
+        });
+    }catch (error) {
+        return res.status(500).json({
+            status: "error",
+            mensaje: 'Error al buscar los artículos',
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     prueba, 
     curso, 
@@ -304,5 +339,6 @@ module.exports = {
     deleteArticle,
     update,
     upload,
-    imagen
+    imagen,
+    search
 }
