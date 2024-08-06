@@ -17,7 +17,8 @@ const PORT = 3900
 app.use(cors())
 
 // convertir body a objeto js
-app.use(express.json())
+app.use(express.json()) // esto es para recibir datos con content-type application/json
+app.use(express.urlencoded({ extended: true })) // esto es para recibir datos con content-type application/x-www-form-urlencoded
 
 // crear rutas
 

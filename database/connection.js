@@ -9,7 +9,7 @@ const connection = async() => {
         console.log('Conectados correctamente a la base de datos mi blog')
     } catch (error) {
         console.log(error)
-        throw new Error('No se ha podido conecatar a la base de dato')
+        throw new Error('No se ha podido conectar a la base de dato')
     }
 } 
 
