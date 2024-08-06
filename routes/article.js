@@ -9,5 +9,6 @@ router.get('/curso', ArticleController.curso)
 
 router.post('/crear', ArticleController.create)
 router.get('/listar', ArticleController.getArticles)
+router.get('/listar/:id', ArticleController.getOne)
 
 module.exports = router;

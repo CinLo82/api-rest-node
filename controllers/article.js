@@ -97,11 +97,45 @@ const getArticles = async (req, res) => {
             error: error.message
         });
     }
+}
+
+
+const getOne = async (req, res) => {
+    try {
+        // Recoger un id por la URL
+        let id = req.params.id;
+
+        // Buscar el artículo
+        const article = await Article.findById(id);
+
+        // Si no existe, devolver el error
+        if (!article) {
+            return res.status(404).json({
+                status: "error",
+                mensaje: 'No existe el artículo'
+            });
+        }
+
+        // Devolver el artículo
+        return res.status(200).json({
+            status: "success",
+            article
+        });
+    } catch (err) {
+        // Manejar errores
+        return res.status(500).json({
+            status: "error",
+            mensaje: 'Error al obtener el artículo',
+            error: err.message
+        });
+    }
 };
+
 
 module.exports = {
     prueba, 
     curso, 
     create,
-    getArticles
+    getArticles, 
+    getOne
 }
