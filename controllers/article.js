@@ -249,7 +249,6 @@ const upload = async (req, res) => {
                         mensaje: 'Error al guardar la imagen del artículo',
                     });
                 }
-
                 return res.status(200).json({
                     status: "success",
                     mensaje: 'Imagen subida y artículo actualizado',
@@ -272,6 +271,29 @@ const upload = async (req, res) => {
     }
 };
 
+const imagen = (req, res) => {
+    // Recoger el nombre del archivo
+    let fichero = req.params.fichero;
+    console.log(fichero)
+
+    // Comprobar si el archivo existe
+    let rutaArchivo = `./images/articles/${fichero}`;
+    console.log(rutaArchivo)
+    fs.stat(rutaArchivo, (error, stats) => {
+        if (stats) {
+        return res.sendFile(path.resolve(rutaArchivo));    
+        // Devolver la imagen
+        } else {
+            if (error) {
+                return res.status(500).json({
+                    status: "error",
+                    mensaje: 'Error al buscar la imagen',
+                    error: error.message
+                });
+            }
+        }
+    });
+}
 
 module.exports = {
     prueba, 
@@ -281,5 +303,6 @@ module.exports = {
     getOne, 
     deleteArticle,
     update,
-    upload
+    upload,
+    imagen
 }

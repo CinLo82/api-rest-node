@@ -29,5 +29,6 @@ router.get('/listar/:id', ArticleController.getOne)
 router.delete('/borrar/:id', ArticleController.deleteArticle)
 router.put('/actualizar/:id', ArticleController.update)
 router.post('/subir-imagen/:id', [upload.single('file')], ArticleController.upload);
+router.get('/imagen/:fichero', ArticleController.imagen);
 
 module.exports = router;
