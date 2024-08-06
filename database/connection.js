@@ -6,7 +6,7 @@ const connection = async() => {
         //  useNewUrlParser: true,
         // useUnifiedTopology: true
         })
-        console.log('Conecatdos correctamente a la base de datos mi blog')
+        console.log('Conectados correctamente a la base de datos mi blog')
     } catch (error) {
         console.log(error)
         throw new Error('No se ha podido conecatar a la base de dato')
