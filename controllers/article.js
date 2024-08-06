@@ -1,4 +1,4 @@
-const validador = require("validator")
+const {validarArticulo} = require("../helpers/validar")
 const Article = require("../models/Article")
 
 const prueba = (req, res) => {
@@ -34,22 +34,15 @@ const create = async(req, res) => {
     // recoger los parametros por post a guardar
     let parametros = req.body
     //validar los datos
-    try{
-        let validar_titulo = !validador.isEmpty(parametros.title) &&
-        validador.isLength(parametros.title, {min: 5, max: undefined})                           
-        let validar_contenido = !validador.isEmpty(parametros.content)
-
-        if(!validar_titulo || !validar_contenido){
-            throw new Error('Los datos no son validos')
-        }
-    }catch{
+    try {
+        validarArticulo(parametros)
+    }catch (error) {
         return res.status(400).json({
             status: "error",
             mensaje: 'Faltan datos por enviar',
             error: error.message
         })
     }
-
     //crear el objeto a guardar || asignar valores a objeto basado en el modelo (automatico)
     const article = new Article(parametros)
 
@@ -173,19 +166,13 @@ const update = async (req, res) => {
 
     // Validar los parámetros
     try {
-        let validar_titulo = !validador.isEmpty(parametros.title) &&
-            validador.isLength(parametros.title, { min: 5, max: undefined });
-        let validar_contenido = !validador.isEmpty(parametros.content);
-
-        if (!validar_titulo || !validar_contenido) {
-            throw new Error('Los datos no son válidos');
-        }
-    } catch (error) {
+        validarArticulo(parametros)
+    }catch (error) {
         return res.status(400).json({
             status: "error",
             mensaje: 'Faltan datos por enviar',
             error: error.message
-        });
+        })
     }
 
     // Buscar y actualizar el artículo por id
