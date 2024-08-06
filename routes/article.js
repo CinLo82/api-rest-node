@@ -11,5 +11,6 @@ router.post('/crear', ArticleController.create)
 router.get('/listar', ArticleController.getArticles)
 router.get('/listar/:id', ArticleController.getOne)
 router.delete('/borrar/:id', ArticleController.deleteArticle)
+router.put('/actualizar/:id', ArticleController.update)
 
 module.exports = router;

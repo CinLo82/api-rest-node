@@ -135,10 +135,10 @@ const deleteArticle = async(req, res) => {
 
     try {
         // Recoger un id por la URL
-        let article_id = req.params.id;
+        let articleId = req.params.id;
 
         // Buscar el artículo
-        const article = await Article.findByIdAndDelete({_id : article_id});
+        const article = await Article.findByIdAndDelete({_id : articleId});
 
         // Si no existe, devolver el error
         if (!article) {
@@ -164,6 +164,56 @@ const deleteArticle = async(req, res) => {
     }
 }
 
+const update = async (req, res) => {
+    // Recoger el id del artículo
+    let articleId = req.params.id;
+
+    // Recoger los datos que llegan por PUT
+    let parametros = req.body;
+
+    // Validar los parámetros
+    try {
+        let validar_titulo = !validador.isEmpty(parametros.title) &&
+            validador.isLength(parametros.title, { min: 5, max: undefined });
+        let validar_contenido = !validador.isEmpty(parametros.content);
+
+        if (!validar_titulo || !validar_contenido) {
+            throw new Error('Los datos no son válidos');
+        }
+    } catch (error) {
+        return res.status(400).json({
+            status: "error",
+            mensaje: 'Faltan datos por enviar',
+            error: error.message
+        });
+    }
+
+    // Buscar y actualizar el artículo por id
+    try {
+        const articleActualizado = await Article.findByIdAndUpdate(articleId, parametros, { new: true });
+
+        if (!articleActualizado) {
+            return res.status(404).json({
+                status: "error",
+                mensaje: 'No existe el artículo'
+            });
+        }
+
+        // Devolver el artículo actualizado
+        return res.status(200).json({
+            status: "success",
+            mensaje: 'El artículo se ha actualizado',
+            article: articleActualizado
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: "error",
+            mensaje: 'Error al actualizar el artículo',
+            error: error.message
+        });
+    }
+};
+
 
 module.exports = {
     prueba, 
@@ -171,5 +221,6 @@ module.exports = {
     create,
     getArticles, 
     getOne, 
-    deleteArticle
+    deleteArticle,
+    update
 }
